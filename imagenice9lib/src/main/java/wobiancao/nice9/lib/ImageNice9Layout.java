@@ -51,23 +51,23 @@ import java.util.List;
  * -------------------------
  * 3
  * -------------------------
- * |           |           |
- * |           |     2     |
- * |           |           |
- * |     1     |-----------|
- * |           |           |
- * |           |     3     |
- * |           |           |
- * -------------------------
- * 4
- * -------------------------
  * |                       |
  * |           1           |
  * |                       |
  * |-----------------------|
- * |      |        |       |
- * |   2  |     3  |    4  |
- * |      |        |       |
+ * |           |           |
+ * |     2     |     3     |
+ * |           |           |
+ * -------------------------
+ * 4
+ * -------------------------
+ * |         |              |
+ * |    1    |      2       |
+ * |         |              |
+ * |----------------------- |
+ * |               |        |
+ * |            3  |    4   |
+ * |               |        |
  * -------------------------
  * 5
  * -------------------------
@@ -96,9 +96,9 @@ import java.util.List;
  * <p>
  * 7
  * -------------------------
- * |                       |
- * |           1           |
- * |                       |
+ * |           |            |
+ * |     1     |      2     |
+ * |           |            |
  * |-----------------------|
  * |      |        |       |
  * |   2  |     3  |    4  |
@@ -140,7 +140,6 @@ import java.util.List;
 
 public class ImageNice9Layout extends LinearLayout implements MyItemTouchCallback.OnDragListener {
     private RecyclerView mRecycler;
-    private TextView mTip;
     private VirtualLayoutManager layoutManager;
     private List<LayoutHelper> helpers;
     private ItemTouchHelper itemTouchHelper;
@@ -149,7 +148,6 @@ public class ImageNice9Layout extends LinearLayout implements MyItemTouchCallbac
     private ImageMulitVAdapter mMulitVAdapter;
     private boolean canDrag = false;
     private Context mContext;
-    private boolean isShowTip = false;
     private int itemMargin = 10;
 
     public ImageNice9Layout(Context context) {
@@ -170,6 +168,8 @@ public class ImageNice9Layout extends LinearLayout implements MyItemTouchCallbac
         }
         typedArray.recycle();
         mMulitVAdapter = new ImageMulitVAdapter(layoutManager, mContext, canDrag, itemMargin);
+        setBackgroundColor(Color.parseColor("#22dd22"));
+        setPadding(itemMargin,itemMargin,itemMargin,itemMargin);
     }
 
     private void initAttr(int attr, TypedArray typedArray) {
@@ -179,57 +179,13 @@ public class ImageNice9Layout extends LinearLayout implements MyItemTouchCallbac
         if (attr == R.styleable.ImageNice9Layout_nice9_itemMargin) {
             itemMargin = (int) typedArray.getDimension(attr, 5);
         }
-        if (attr == R.styleable.ImageNice9Layout_nice9_tipText) {
-            setTipText(typedArray.getString(attr));
-        }
-        if (attr == R.styleable.ImageNice9Layout_nice9_tipColor) {
-            setTipColor(typedArray.getColor(attr, Color.parseColor("#ffffff")));
-        }
-        if (attr == R.styleable.ImageNice9Layout_nice9_tipBgColor) {
-            setTipBgColor(typedArray.getColor(attr, Color.parseColor("#40000000")));
-        }
-        if (attr == R.styleable.ImageNice9Layout_nice9_tipBgDrawable) {
-            setTipBgDrawable(typedArray.getDrawable(attr));
-        }
     }
 
-    /**
-     * 提示文字背景
-     **/
-    public void setTipBgDrawable(Drawable tipBgDrawable) {
-        mTip.setBackground(tipBgDrawable);
-    }
-
-    /**
-     * 提示文字颜色
-     **/
-    public void setTipColor(int tipBgColor) {
-        mTip.setTextColor(tipBgColor);
-    }
-
-    /**
-     * 提示背景颜色
-     **/
-    public void setTipBgColor(int tipBgColor) {
-        mTip.setBackgroundColor(tipBgColor);
-    }
-
-    /**
-     * 提示文字
-     **/
-    public void setTipText(String string) {
-        mTip.setText(string);
-    }
-
-    public void setTipText(@StringRes int string) {
-        setTipText(getResources().getString(string));
-    }
 
     private void initView(Context context) {
         mContext = context;
         View view = LayoutInflater.from(mContext).inflate(R.layout.view_imagemulit_layout, this);
-        mRecycler = (RecyclerView) view.findViewById(R.id.drag_recycler);
-        mTip = (TextView) view.findViewById(R.id.drag_tip);
+        mRecycler = view.findViewById(R.id.drag_recycler);
         layoutManager = new VirtualLayoutManager(mContext);
         mRecycler.setHasFixedSize(true);
         mRecycler.setLayoutManager(layoutManager);
@@ -251,36 +207,20 @@ public class ImageNice9Layout extends LinearLayout implements MyItemTouchCallbac
     public void bindData(List<String> pictures) {
         if (pictures != null) {
             helpers = new LinkedList<>();
+
             gridLayoutHelper = new GridLayoutHelper(6);
             gridLayoutHelper.setGap(itemMargin);
             gridLayoutHelper.setHGap(itemMargin);
-            onePlusHelper = new OnePlusNLayoutHelper(3);
-            mTip.setVisibility(canDrag ? VISIBLE : INVISIBLE);
+            gridLayoutHelper.setAutoExpand(true);
+            onePlusHelper = new OnePlusNLayoutHelper(3,itemMargin,itemMargin,itemMargin,itemMargin);
+
             final int num = pictures.size();
+
+
             ViewGroup.LayoutParams layoutParams = mRecycler.getLayoutParams();
             int displayW = DisplayUtils.getDisplayWidth(mContext);
-            layoutParams.width = displayW;
-            int height;
-            if (num == 1) {
-                height = layoutParams.width;
-            } else if (num == 2) {
-                height = (int) (displayW * 0.5);
-            } else if (num == 3) {
-                height = (int) (displayW * 0.66) - itemMargin - itemMargin / 2;
-            } else if (num == 4) {
-                height = (int) (displayW * 0.5) + itemMargin + (int) (displayW * 0.33);
-            } else if (num == 5) {
-                height = (int) (displayW * 0.5) + itemMargin + (int) (displayW * 0.33);
-            } else if (num == 6) {
-                height = (int) (displayW * 0.66) + (int) (displayW * 0.33) - itemMargin / 2;
-            } else if (num == 7 || num == 8) {
-                height = (int) (displayW * 0.5) + 2 * itemMargin + (int) (displayW * 0.33) * 2;
-            } else {
-                height = (int) ((displayW * 0.33) * 3 + 3 * itemMargin - itemMargin / 2);
-            }
-            layoutParams.height = height;
+            layoutParams.height = layoutParams.width = displayW;
             mRecycler.setLayoutParams(layoutParams);
-            //根据数量和位置 设置span占比
             gridLayoutHelper.setSpanSizeLookup(new GridLayoutHelper.SpanSizeLookup() {
                 @Override
                 public int getSpanSize(int position) {
@@ -289,64 +229,77 @@ public class ImageNice9Layout extends LinearLayout implements MyItemTouchCallbac
                     } else if (num == 2) {
                         return 3;
                     } else if (num == 3) {
-                        return 2;
+                        return position == 0?6:3;
                     } else if (num == 4) {
-                        if (position == 0) {
-                            return 6;
-                        } else {
-                            return 2;
-                        }
-                    } else if (num == 5) {
-                        if (position == 0 || position == 1) {
+                        gridLayoutHelper.setSpanCount(7);
+                        if (position == 0 || position == 3) {
                             return 3;
                         } else {
+                            return 4;
+                        }
+                    } else if (num == 5) {
+                        if(position == 1){
+                            return 4;
+                        }else {
                             return 2;
                         }
                     } else if (num == 6) {
-                        return 2;
+                        return position == 0?4:2;
                     } else if (num == 7) {
-                        if (position == 0) {
-                            return 6;
+                        if (position < 4) {
+                            return 3;
                         } else {
                             return 2;
                         }
                     } else if (num == 8) {
-                        if (position == 0 || position == 1) {
-                            return 3;
-                        } else {
+                        gridLayoutHelper.setSpanCount(4);
+                        if (position == 0 || position == 3 || position == 4|| position == 7) {
                             return 2;
+                        } else {
+                            return 1;
                         }
                     } else {
-                        return 2;
+                        return position == 0?4:2;
                     }
                 }
             });
+
+
             helpers.clear();
-            if (num == 3) {
+
+
+            if (num == 6) {
+                onePlusHelper.setMargin(0,0,0,itemMargin);
+                onePlusHelper.setColWeights(new float[]{
+                        ((displayW - 2*itemMargin) * 2f/3f+2*itemMargin+1)/displayW*100
+
+                });
                 helpers.add(onePlusHelper);
-                gridLayoutHelper.setItemCount(0);
+
+
+                gridLayoutHelper.setItemCount(3);
+            } else if (num == 9) {
+                onePlusHelper.setMargin(0,0,0,itemMargin);
+                onePlusHelper.setColWeights(new float[]{
+                        ((displayW - 2*itemMargin) * 2f/3f+2*itemMargin+1)/displayW*100
+
+                });
+                helpers.add(onePlusHelper);
+                gridLayoutHelper.setItemCount(6);
+
             } else {
-                if (num == 6) {
-                    helpers.add(onePlusHelper);
-                    gridLayoutHelper.setItemCount(3);
-                } else {
-                    gridLayoutHelper.setItemCount(num);
-                }
-                helpers.add(gridLayoutHelper);
+                gridLayoutHelper.setItemCount(num);
             }
+            helpers.add(gridLayoutHelper);
+
+
             layoutManager.setLayoutHelpers(helpers);
+
             mMulitVAdapter.bindData(pictures);
             mRecycler.setAdapter(mMulitVAdapter);
+
+
             if (canDrag) {
-                if (!isShowTip && pictures.size() > 1) {
-                    mRecycler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            mTip.setVisibility(View.INVISIBLE);
-                        }
-                    }, 500);
-                    isShowTip = true;
-                }
                 itemTouchHelper = new ItemTouchHelper(new MyItemTouchCallback(mMulitVAdapter).setOnDragListener(this));
                 itemTouchHelper.attachToRecyclerView(mRecycler);
                 mRecycler.addOnItemTouchListener(new OnRecyclerItemClickListener(mRecycler) {
@@ -381,4 +334,8 @@ public class ImageNice9Layout extends LinearLayout implements MyItemTouchCallbac
         void onItemClick(int position);
     }
 
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, widthMeasureSpec);
+    }
 }

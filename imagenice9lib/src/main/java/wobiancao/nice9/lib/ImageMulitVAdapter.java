@@ -59,85 +59,71 @@ public class ImageMulitVAdapter extends VirtualLayoutAdapter<ImageMulitVAdapter.
     @Override
     public void onBindViewHolder(ImageViewHolder holder, final int position) {
         VirtualLayoutManager.LayoutParams layoutParams = new VirtualLayoutManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
         int width = 0, height = 0;
         int imageCount = pictures.size();
         int displayW = DisplayUtils.getDisplayWidth(context);
+
         if (imageCount == 1) {
-            width = displayW;
-            height = width;
+            height = displayW;
         } else if (imageCount == 2) {
-            width = displayW / 2;
-            height = width;
+            height = displayW;
         } else if (imageCount == 3) {
-            if (position == 0) {
-                width = (int) (displayW * 0.66);
-                height = width;
-                layoutParams.rightMargin = itemMargin;
-                layoutParams.bottomMargin = itemMargin;
-            } else {
-                if (position == 1 || position == 2) {
-                    if (position == 1) {
-                        layoutParams.bottomMargin = itemMargin / 2;
-                    } else {
-                        layoutParams.bottomMargin = itemMargin;
-                    }
-                }
-                width = (int) ((displayW * 0.33));
-                height = width;
-            }
+                height = (int) ((displayW - itemMargin) * 0.5);
         } else if (imageCount == 4) {
-            if (position == 0) {
-                width = displayW;
-                height = (int) (width * 0.5);
-            } else {
-                width = (int) (displayW * 0.33);
-                height = width;
-            }
+
+            height = (int) ((displayW - itemMargin) * 0.5);
+
         } else if (imageCount == 5) {
             if (position == 0 || position == 1) {
-                width = (int) (displayW * 0.5);
-                height = width;
+                height = (int) ((displayW - itemMargin) * 2/3);
             } else {
-                width = (int) (displayW * 0.33);
-                height = width;
+                height = (int) ((displayW - itemMargin) * 1/3);
             }
         } else if (imageCount == 6) {
-            if (position == 0) {
-                width = (int) (displayW * 0.66);
-                height = width;
-                layoutParams.rightMargin = 10;
-                layoutParams.bottomMargin = 10;
-            } else {
-                if (position == 1 || position == 2) {
-                    if (position == 1) {
-                        layoutParams.bottomMargin = itemMargin / 2;
-                    } else {
-                        layoutParams.bottomMargin = itemMargin;
-                    }
 
-                }
-                width = (int) (displayW * 0.33);
-                height = width;
+            if (position == 0){
+                height =  (displayW - 2*itemMargin) * 2/3;
+
+                layoutParams.rightMargin = itemMargin;
+            }else if ( position >= 3 && position <=5){
+                height =  (displayW - 2*itemMargin) * 1/3;
+            }else if (position == 2){
+                layoutParams.topMargin = itemMargin;
+                height =  (displayW - (displayW - 2*itemMargin) * 1/3 - 2*itemMargin) * 1/2;
+            }else {
+                height =  (displayW - (displayW - 2*itemMargin) * 1/3 - 2*itemMargin) * 1/2;
             }
+
         } else if (imageCount == 7) {
-            if (position == 0) {
-                width = displayW;
-                height = (int) (width * 0.5);
-            } else {
-                width = (int) (displayW * 0.33);
-                height = width;
+
+
+            if (position <= 1){
+                height = (displayW - 3*itemMargin)*2/4+itemMargin;
+            }else {
+                height = (displayW - 3*itemMargin)*1/4;
             }
+
+
+
+
         } else if (imageCount == 8) {
-            if (position == 0 || position == 1) {
-                width = (int) (displayW * 0.5);
-                height = width;
+            if (position == 3 || position == 4) {
+                height = (displayW - 3*itemMargin)*2/4+itemMargin;
             } else {
-                width = (int) (displayW * 0.33);
-                height = width;
+                height = (displayW - 3*itemMargin)*1/4;
+
             }
         } else {
-            width = (int) (displayW * 0.33);
-            height = width;
+            if (position == 0){
+                layoutParams.rightMargin = itemMargin;
+                height = (displayW - 3*itemMargin)*2/4+itemMargin;
+            }else if (position == 2){
+                layoutParams.topMargin = itemMargin;
+                height = (displayW - 3*itemMargin)*1/4;
+            }else {
+                height = (displayW - 3*itemMargin)*1/4;
+            }
         }
         layoutParams.width = width;
         layoutParams.height = height;

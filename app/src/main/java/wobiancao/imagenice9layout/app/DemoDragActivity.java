@@ -33,9 +33,8 @@ public class DemoDragActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
+        num = 9;
         bindData();
-
-
     }
 
     private void bindData() {

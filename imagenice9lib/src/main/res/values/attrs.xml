@@ -3,9 +3,5 @@
     <declare-styleable name="ImageNice9Layout">
         <attr name="nice9_candrag" format="boolean"/>
         <attr name="nice9_itemMargin" format="dimension"/>
-        <attr name="nice9_tipText" format="reference|string"/>
-        <attr name="nice9_tipColor" format="reference|color"/>
-        <attr name="nice9_tipBgColor" format="reference|color"/>
-        <attr name="nice9_tipBgDrawable" format="reference"/>
     </declare-styleable>
 </resources>
