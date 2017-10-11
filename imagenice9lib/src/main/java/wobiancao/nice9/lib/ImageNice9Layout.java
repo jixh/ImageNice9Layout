@@ -4,9 +4,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.AttributeSet;
@@ -14,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.alibaba.android.vlayout.LayoutHelper;
 import com.alibaba.android.vlayout.VirtualLayoutManager;
@@ -149,6 +146,8 @@ public class ImageNice9Layout extends LinearLayout implements MyItemTouchCallbac
     private boolean canDrag = false;
     private Context mContext;
     private int itemMargin = 10;
+    private Drawable errorDrawable;
+    private int displayW;
 
     public ImageNice9Layout(Context context) {
         this(context, null);
@@ -167,8 +166,8 @@ public class ImageNice9Layout extends LinearLayout implements MyItemTouchCallbac
             initAttr(typedArray.getIndex(i), typedArray);
         }
         typedArray.recycle();
-        mMulitVAdapter = new ImageMulitVAdapter(layoutManager, mContext, canDrag, itemMargin);
-        setBackgroundColor(Color.parseColor("#22dd22"));
+        mMulitVAdapter = new ImageMulitVAdapter(layoutManager, mContext, canDrag, itemMargin,errorDrawable);
+        setBackgroundColor(Color.parseColor("#ffffff"));
         setPadding(itemMargin,itemMargin,itemMargin,itemMargin);
     }
 
@@ -178,6 +177,10 @@ public class ImageNice9Layout extends LinearLayout implements MyItemTouchCallbac
         }
         if (attr == R.styleable.ImageNice9Layout_nice9_itemMargin) {
             itemMargin = (int) typedArray.getDimension(attr, 5);
+        }
+
+        if (attr == R.styleable.ImageNice9Layout_nice9_error) {
+            errorDrawable = typedArray.getDrawable(attr);
         }
     }
 
@@ -216,9 +219,8 @@ public class ImageNice9Layout extends LinearLayout implements MyItemTouchCallbac
 
             final int num = pictures.size();
 
-
             ViewGroup.LayoutParams layoutParams = mRecycler.getLayoutParams();
-            int displayW = DisplayUtils.getDisplayWidth(mContext);
+//            displayW = DisplayUtils.getDisplayWidth(mContext);
             layoutParams.height = layoutParams.width = displayW;
             mRecycler.setLayoutParams(layoutParams);
             gridLayoutHelper.setSpanSizeLookup(new GridLayoutHelper.SpanSizeLookup() {
@@ -294,7 +296,7 @@ public class ImageNice9Layout extends LinearLayout implements MyItemTouchCallbac
 
 
             layoutManager.setLayoutHelpers(helpers);
-
+            mMulitVAdapter.setDisplayW(displayW);
             mMulitVAdapter.bindData(pictures);
             mRecycler.setAdapter(mMulitVAdapter);
 
@@ -337,5 +339,7 @@ public class ImageNice9Layout extends LinearLayout implements MyItemTouchCallbac
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, widthMeasureSpec);
+        displayW = getMeasuredWidth();
+
     }
 }

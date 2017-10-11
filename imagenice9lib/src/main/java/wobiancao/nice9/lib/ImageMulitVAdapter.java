@@ -1,6 +1,7 @@
 package wobiancao.nice9.lib;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -26,6 +27,18 @@ public class ImageMulitVAdapter extends VirtualLayoutAdapter<ImageMulitVAdapter.
     private boolean canDrag;
     private int itemMargin;
     private ImageNice9Layout.ItemDelegate mItemDelegate;
+    int width = 0, height = 0;
+    int imageCount;
+    int displayW =200;
+    private Drawable errorDrawable;
+
+    public int getDisplayW() {
+        return displayW;
+    }
+
+    public void setDisplayW(int displayW) {
+        this.displayW = displayW;
+    }
 //    public ImageMulitVAdapter(@NonNull VirtualLayoutManager layoutManager, List<String> pictures, Context context, boolean canDrag, int itemMagrin) {
 //        super(layoutManager);
 //        this.pictures = pictures;
@@ -35,15 +48,17 @@ public class ImageMulitVAdapter extends VirtualLayoutAdapter<ImageMulitVAdapter.
 //    }
 
 
-    public ImageMulitVAdapter(@NonNull VirtualLayoutManager layoutManager, Context context, boolean canDrag, int itemMargin) {
+    public ImageMulitVAdapter(@NonNull VirtualLayoutManager layoutManager, Context context, boolean canDrag, int itemMargin,Drawable errorDrawable) {
         super(layoutManager);
         this.context = context;
         this.canDrag = canDrag;
         this.itemMargin = itemMargin;
+        this.errorDrawable = errorDrawable;
     }
 
     public void bindData(List<String> pictures){
         this.pictures = pictures;
+        imageCount = pictures.size();
         notifyDataSetChanged();
     }
 
@@ -59,11 +74,6 @@ public class ImageMulitVAdapter extends VirtualLayoutAdapter<ImageMulitVAdapter.
     @Override
     public void onBindViewHolder(ImageViewHolder holder, final int position) {
         VirtualLayoutManager.LayoutParams layoutParams = new VirtualLayoutManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-
-        int width = 0, height = 0;
-        int imageCount = pictures.size();
-        int displayW = DisplayUtils.getDisplayWidth(context);
-
         if (imageCount == 1) {
             height = displayW;
         } else if (imageCount == 2) {
@@ -97,21 +107,16 @@ public class ImageMulitVAdapter extends VirtualLayoutAdapter<ImageMulitVAdapter.
 
         } else if (imageCount == 7) {
 
-
             if (position <= 1){
                 height = (displayW - 3*itemMargin)*2/4+itemMargin;
             }else {
-                height = (displayW - 3*itemMargin)*1/4;
+                height = (displayW - 3*itemMargin)/4;
             }
-
-
-
-
         } else if (imageCount == 8) {
             if (position == 3 || position == 4) {
                 height = (displayW - 3*itemMargin)*2/4+itemMargin;
             } else {
-                height = (displayW - 3*itemMargin)*1/4;
+                height = (displayW - 3*itemMargin)/4;
 
             }
         } else {
@@ -120,9 +125,9 @@ public class ImageMulitVAdapter extends VirtualLayoutAdapter<ImageMulitVAdapter.
                 height = (displayW - 3*itemMargin)*2/4+itemMargin;
             }else if (position == 2){
                 layoutParams.topMargin = itemMargin;
-                height = (displayW - 3*itemMargin)*1/4;
+                height = (displayW - 3*itemMargin)/4;
             }else {
-                height = (displayW - 3*itemMargin)*1/4;
+                height = (displayW - 3*itemMargin)/4;
             }
         }
         layoutParams.width = width;
@@ -142,6 +147,7 @@ public class ImageMulitVAdapter extends VirtualLayoutAdapter<ImageMulitVAdapter.
         });
         Glide.with(context)
                 .load(imageUrl)
+                .error(errorDrawable)
                 .centerCrop()
                 .into(holder.mImageView);
     }
@@ -179,7 +185,7 @@ public class ImageMulitVAdapter extends VirtualLayoutAdapter<ImageMulitVAdapter.
 
         public ImageViewHolder(View itemView) {
             super(itemView);
-            mImageView = (ImageView) itemView.findViewById(R.id.item_mulit_image);
+            mImageView = itemView.findViewById(R.id.item_mulit_image);
         }
     }
 

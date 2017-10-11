@@ -40,7 +40,8 @@
         android:id="@+id/image_nice9_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="20dp"
         app:nice9_candrag="true"
+        app:nice9_error="@mipmap/ic_launcher"
+        android:layout_margin="20dp"
         android:orientation="vertical"/>
 </LinearLayout>

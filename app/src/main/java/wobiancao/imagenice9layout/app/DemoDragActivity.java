@@ -33,8 +33,12 @@ public class DemoDragActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
-        num = 9;
-        bindData();
+        mImageNice9Layout.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                bindData();
+            }
+        },1000);
     }
 
     private void bindData() {

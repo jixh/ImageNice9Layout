@@ -3,5 +3,6 @@
     <declare-styleable name="ImageNice9Layout">
         <attr name="nice9_candrag" format="boolean"/>
         <attr name="nice9_itemMargin" format="dimension"/>
+        <attr name="nice9_error" format="reference"/>
     </declare-styleable>
 </resources>
