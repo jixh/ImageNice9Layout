@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -148,6 +149,7 @@ public class ImageNice9Layout extends LinearLayout implements MyItemTouchCallbac
     private int itemMargin = 10;
     private Drawable errorDrawable;
     private int displayW;
+    private int size;
 
     public ImageNice9Layout(Context context) {
         this(context, null);
@@ -208,96 +210,24 @@ public class ImageNice9Layout extends LinearLayout implements MyItemTouchCallbac
 
     //绑定数据，根据数据，先行计算recyclerview高度，固定高度，防止多重滑动时候冲突
     public void bindData(List<String> pictures) {
+
         if (pictures != null) {
+
             helpers = new LinkedList<>();
 
             gridLayoutHelper = new GridLayoutHelper(6);
             gridLayoutHelper.setGap(itemMargin);
             gridLayoutHelper.setHGap(itemMargin);
             gridLayoutHelper.setAutoExpand(true);
+
             onePlusHelper = new OnePlusNLayoutHelper(3,itemMargin,itemMargin,itemMargin,itemMargin);
 
-            final int num = pictures.size();
+            size = pictures.size();
 
-            ViewGroup.LayoutParams layoutParams = mRecycler.getLayoutParams();
-//            displayW = DisplayUtils.getDisplayWidth(mContext);
-            layoutParams.height = layoutParams.width = displayW;
-            mRecycler.setLayoutParams(layoutParams);
-            gridLayoutHelper.setSpanSizeLookup(new GridLayoutHelper.SpanSizeLookup() {
-                @Override
-                public int getSpanSize(int position) {
-                    if (num == 1) {
-                        return 6;
-                    } else if (num == 2) {
-                        return 3;
-                    } else if (num == 3) {
-                        return position == 0?6:3;
-                    } else if (num == 4) {
-                        gridLayoutHelper.setSpanCount(7);
-                        if (position == 0 || position == 3) {
-                            return 3;
-                        } else {
-                            return 4;
-                        }
-                    } else if (num == 5) {
-                        if(position == 1){
-                            return 4;
-                        }else {
-                            return 2;
-                        }
-                    } else if (num == 6) {
-                        return position == 0?4:2;
-                    } else if (num == 7) {
-                        if (position < 4) {
-                            return 3;
-                        } else {
-                            return 2;
-                        }
-                    } else if (num == 8) {
-                        gridLayoutHelper.setSpanCount(4);
-                        if (position == 0 || position == 3 || position == 4|| position == 7) {
-                            return 2;
-                        } else {
-                            return 1;
-                        }
-                    } else {
-                        return position == 0?4:2;
-                    }
-                }
-            });
+            setWH(size);
 
-
-            helpers.clear();
-
-
-            if (num == 6) {
-                onePlusHelper.setMargin(0,0,0,itemMargin);
-                onePlusHelper.setColWeights(new float[]{
-                        ((displayW - 2*itemMargin) * 2f/3f+2*itemMargin+1)/displayW*100
-
-                });
-                helpers.add(onePlusHelper);
-
-
-                gridLayoutHelper.setItemCount(3);
-            } else if (num == 9) {
-                onePlusHelper.setMargin(0,0,0,itemMargin);
-                onePlusHelper.setColWeights(new float[]{
-                        ((displayW - 2*itemMargin) * 2f/3f+2*itemMargin+1)/displayW*100
-
-                });
-                helpers.add(onePlusHelper);
-                gridLayoutHelper.setItemCount(6);
-
-            } else {
-                gridLayoutHelper.setItemCount(num);
-            }
-            helpers.add(gridLayoutHelper);
-
-
-            layoutManager.setLayoutHelpers(helpers);
-            mMulitVAdapter.setDisplayW(displayW);
             mMulitVAdapter.bindData(pictures);
+            layoutManager.setLayoutHelpers(helpers);
             mRecycler.setAdapter(mMulitVAdapter);
 
 
@@ -317,6 +247,86 @@ public class ImageNice9Layout extends LinearLayout implements MyItemTouchCallbac
             }
         }
 
+    }
+
+    private void setWH(final int num) {
+        ViewGroup.LayoutParams layoutParams = mRecycler.getLayoutParams();
+        layoutParams.height = layoutParams.width = displayW;
+        mRecycler.setLayoutParams(layoutParams);
+
+        gridLayoutHelper.setSpanSizeLookup(new GridLayoutHelper.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                if (num == 1) {
+                    return 6;
+                } else if (num == 2) {
+                    return 3;
+                } else if (num == 3) {
+                    return position == 0?6:3;
+                } else if (num == 4) {
+                    gridLayoutHelper.setSpanCount(7);
+                    if (position == 0 || position == 3) {
+                        return 3;
+                    } else {
+                        return 4;
+                    }
+                } else if (num == 5) {
+                    if(position == 1){
+                        return 4;
+                    }else {
+                        return 2;
+                    }
+                } else if (num == 6) {
+                    return position == 0?4:2;
+                } else if (num == 7) {
+                    if (position < 4) {
+                        return 3;
+                    } else {
+                        return 2;
+                    }
+                } else if (num == 8) {
+                    gridLayoutHelper.setSpanCount(4);
+                    if (position == 0 || position == 3 || position == 4|| position == 7) {
+                        return 2;
+                    } else {
+                        return 1;
+                    }
+                } else {
+                    return position == 0?4:2;
+                }
+            }
+        });
+
+
+        helpers.clear();
+
+
+        if (num == 6) {
+            onePlusHelper.setMargin(0,0,0,itemMargin);
+            onePlusHelper.setColWeights(new float[]{
+                    ((displayW - 2*itemMargin) * 2f/3f+2*itemMargin+1)/displayW*100
+
+            });
+            helpers.add(onePlusHelper);
+
+
+            gridLayoutHelper.setItemCount(3);
+        } else if (num == 9) {
+            onePlusHelper.setMargin(0,0,0,itemMargin);
+            onePlusHelper.setColWeights(new float[]{
+                    ((displayW - 2*itemMargin) * 2f/3f+2*itemMargin+1)/displayW*100
+
+            });
+            helpers.add(onePlusHelper);
+            gridLayoutHelper.setItemCount(6);
+
+        } else {
+            gridLayoutHelper.setItemCount(num);
+        }
+
+        helpers.add(gridLayoutHelper);
+
+        mMulitVAdapter.setDisplayW(displayW);
     }
 
     /**
@@ -340,6 +350,6 @@ public class ImageNice9Layout extends LinearLayout implements MyItemTouchCallbac
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, widthMeasureSpec);
         displayW = getMeasuredWidth();
-
+        setWH(size);
     }
 }
