@@ -147,6 +147,7 @@ public class ImageMulitVAdapter extends VirtualLayoutAdapter<ImageMulitVAdapter.
         });
         Glide.with(context)
                 .load(imageUrl)
+                .placeholder(errorDrawable)
                 .error(errorDrawable)
                 .centerCrop()
                 .into(holder.mImageView);
