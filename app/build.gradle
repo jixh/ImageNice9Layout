@@ -1,14 +1,15 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion ANDROID_BUILD_SDK_VERSION as int
-    buildToolsVersion ANDROID_BUILD_TOOLS_VERSION
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+
     defaultConfig {
-        applicationId ANDROID_APPLICATIONID
-        minSdkVersion ANDROID_BUILD_MIN_SDK_VERSION as int
-        targetSdkVersion ANDROID_BUILD_TARGET_SDK_VERSION as int
-        versionCode APP_VERSION_CODE as int
-        versionName APP_VERSION_NAME
+        applicationId 'wobiancao.imagenice9layout.app'
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode 1
+        versionName '1.0'
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -27,7 +28,7 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile "com.android.support:appcompat-v7:${SUPPORT_VERSION}"
-    testCompile "junit:junit:${JUNIT_VERSION}"
+    compile "com.android.support:appcompat-v7:$support_version"
+    testCompile "junit:junit:${junit_version}"
     implementation project(':imagenice9lib')
 }

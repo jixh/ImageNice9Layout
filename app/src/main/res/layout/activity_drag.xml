@@ -35,7 +35,14 @@
             android:text="+"
             android:textSize="18sp"/>
     </LinearLayout>
-
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
     <wobiancao.nice9.lib.ImageNice9Layout
         android:id="@+id/image_nice9_layout"
         android:layout_width="match_parent"
@@ -44,4 +51,11 @@
         app:nice9_error="@mipmap/ic_launcher"
         android:layout_margin="20dp"
         android:orientation="vertical"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="400dp"
+            android:text="lfdsjfldksfjlkdsfldslk"
+            />
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

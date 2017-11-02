@@ -5,8 +5,7 @@ buildscript {
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.0-rc2'
-        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
+        classpath 'com.android.tools.build:gradle:3.1.0-alpha01'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -21,4 +20,16 @@ allprojects {
 
 task clean(type: Delete) {
     delete rootProject.buildDir
+}
+
+ext {
+    compileSdkVersion = 26
+    buildToolsVersion = '26.0.2'
+    minSdkVersion = 14
+    targetSdkVersion = 26
+    support_version = '26.0.2'
+    vlayout_version = '1.0.6'
+    glide_version = '3.7.0'
+    junit_version = '4.12'
+
 }
