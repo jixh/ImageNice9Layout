@@ -213,6 +213,10 @@ public class ImageNice9Layout extends LinearLayout implements MyItemTouchCallbac
 
         if (pictures != null) {
 
+            size = pictures.size();
+
+            if (size == 0)return;
+
             helpers = new LinkedList<>();
 
             gridLayoutHelper = new GridLayoutHelper(6);
@@ -222,7 +226,6 @@ public class ImageNice9Layout extends LinearLayout implements MyItemTouchCallbac
 
             onePlusHelper = new OnePlusNLayoutHelper(3,itemMargin,itemMargin,itemMargin,itemMargin);
 
-            size = pictures.size();
 
             setWH(size);
 
@@ -250,6 +253,9 @@ public class ImageNice9Layout extends LinearLayout implements MyItemTouchCallbac
     }
 
     private void setWH(final int num) {
+
+        if (num == 0)return;
+
         ViewGroup.LayoutParams layoutParams = mRecycler.getLayoutParams();
         layoutParams.height = layoutParams.width = displayW;
         mRecycler.setLayoutParams(layoutParams);
