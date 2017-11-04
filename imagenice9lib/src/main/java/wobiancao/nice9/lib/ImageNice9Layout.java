@@ -170,7 +170,7 @@ public class ImageNice9Layout extends LinearLayout implements MyItemTouchCallbac
         typedArray.recycle();
         mMulitVAdapter = new ImageMulitVAdapter(layoutManager, mContext, canDrag, itemMargin,errorDrawable);
         setBackgroundColor(Color.parseColor("#ffffff"));
-        setPadding(itemMargin,itemMargin,itemMargin,itemMargin);
+//        setPadding(itemMargin,itemMargin,itemMargin,itemMargin);
     }
 
     private void initAttr(int attr, TypedArray typedArray) {
@@ -210,10 +210,10 @@ public class ImageNice9Layout extends LinearLayout implements MyItemTouchCallbac
 
     //绑定数据，根据数据，先行计算recyclerview高度，固定高度，防止多重滑动时候冲突
     public void bindData(List<String> pictures) {
-
         if (pictures != null) {
-
             num = pictures.size();
+            Log.i("TAG","bindData"+ num);
+
             if (num == 0)return;
 
             helpers = new LinkedList<>();
@@ -271,9 +271,7 @@ public class ImageNice9Layout extends LinearLayout implements MyItemTouchCallbac
             setWH(num);
 
             mMulitVAdapter.bindData(pictures);
-            layoutManager.setLayoutHelpers(helpers);
             mRecycler.setAdapter(mMulitVAdapter);
-
 
             if (canDrag) {
                 itemTouchHelper = new ItemTouchHelper(new MyItemTouchCallback(mMulitVAdapter).setOnDragListener(this));
@@ -295,7 +293,7 @@ public class ImageNice9Layout extends LinearLayout implements MyItemTouchCallbac
 
     private void setWH(final int num) {
 
-        if (num == 0)return;
+        if (num == 0 || displayW == 0)return;
 
         ViewGroup.LayoutParams layoutParams = mRecycler.getLayoutParams();
         layoutParams.height = layoutParams.width = displayW;
@@ -322,10 +320,13 @@ public class ImageNice9Layout extends LinearLayout implements MyItemTouchCallbac
         } else {
             gridLayoutHelper.setItemCount(num);
         }
-
         helpers.add(gridLayoutHelper);
 
         mMulitVAdapter.setDisplayW(displayW);
+        layoutManager.setLayoutHelpers(helpers);
+        mMulitVAdapter.notifyDataSetChanged();
+        postInvalidate();
+
     }
 
     /**
@@ -346,12 +347,11 @@ public class ImageNice9Layout extends LinearLayout implements MyItemTouchCallbac
     }
 
     @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        super.onSizeChanged(w, h, oldw, oldh);
-        if (displayW == w)return;
-        displayW = w;
-        Log.i("TAG","onSizeChanged");
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, widthMeasureSpec);
+        if (displayW == getWidth())return;
+        displayW = getWidth();
         setWH(num);
+        Log.i("TAG","onMeasure");
     }
-
 }
