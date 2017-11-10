@@ -190,6 +190,7 @@ public class ImageNice9Layout extends LinearLayout implements MyItemTouchCallbac
     private void initView(Context context) {
         mContext = context;
         View view = LayoutInflater.from(mContext).inflate(R.layout.view_imagemulit_layout, this);
+        view.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         mRecycler = view.findViewById(R.id.drag_recycler);
         layoutManager = new VirtualLayoutManager(mContext);
         mRecycler.setHasFixedSize(true);
