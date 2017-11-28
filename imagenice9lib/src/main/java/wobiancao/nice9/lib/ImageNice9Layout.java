@@ -350,8 +350,8 @@ public class ImageNice9Layout extends LinearLayout implements MyItemTouchCallbac
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, widthMeasureSpec);
-        if (displayW == getWidth())return;
-        displayW = getWidth();
+        if (displayW == getMeasuredWidth())return;
+        displayW = getMeasuredWidth();
         setWH(num);
         Log.i("TAG","onMeasure");
     }
